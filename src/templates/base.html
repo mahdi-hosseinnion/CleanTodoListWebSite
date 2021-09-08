@@ -4,7 +4,14 @@
 <head>
   <meta charset="utf-8">
   <title>Home</title>
-  <h3>HEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD</h3>
+  {% if request.user.is_authenticated %}
+    <p>Hello, {{request.user.username}} | <a href="{% url 'logout' %}"> Logout</a></p>
+
+  {% else %}
+  <p> <a href="{% url 'register' %}">Register</a> | <a href="{% url 'home' %}">Login</a> </p>
+
+  {% endif %}
+  <hr>
 </head>
 
 <body>
@@ -13,7 +20,8 @@
 </body>
 
 <footer>
-  <h4>fooooooooooooooooooooooooooooooooooot</h4>
+  <hr>
+  <h4>Clean todo list website | beta version</h4>
 </footer>
 
 </html>
