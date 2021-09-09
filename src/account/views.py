@@ -2,24 +2,24 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from account.forms import RegistrationForm, AccountAuthenticationForm, AccountUpdateForm
 
-
 def registration_view(request):
-    context = {}
-    if request.POST:
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            email = form.cleaned_data.get('email')
-            raw_password = form.cleaned_data.get('password1')
-            account = authenticate(email = email, password = raw_password)
-            login(request,account)
-            return redirect('home')
-        else:#There some error while registation
-            context['registation_form'] = form
-    else:#GET request
-        form = RegistrationForm()
-        context['registation_form'] = form
-    return render(request,"account/register.html",context)
+	context = {}
+	if request.POST:
+		form = RegistrationForm(request.POST)
+		if form.is_valid():
+			form.save()
+			email = form.cleaned_data.get('email')
+			raw_password = form.cleaned_data.get('password1')
+			account = authenticate(email=email, password=raw_password)
+			login(request, account)
+			return redirect('home')
+		else:
+			context['registration_form'] = form
+
+	else:
+		form = RegistrationForm()
+		context['registration_form'] = form
+	return render(request, 'account/register.html', context)
 
 
 def logout_view(request):
@@ -53,24 +53,28 @@ def login_view(request):
     return render(request,"account/login.html",context)
 
 def account_view(request):
-    context = {}
 
-    if not request.user.is_authenticated:
-        return redirect('login')
+	if not request.user.is_authenticated:
+			return redirect("login")
 
-    if request.POST:
-        form = AccountUpdateForm(request.POST, instance = request.user)
-        if form.is_valid():
-            form.save()
-    else:
-        form = AccountUpdateForm(
-                    initial = {
-                        "email": request.user.email,
-                        "username" : request.user.username
-                        }
-        )
+	context = {}
+	if request.POST:
+		form = AccountUpdateForm(request.POST, instance=request.user)
+		if form.is_valid():
+			form.initial = {
+					"email": request.POST['email'],
+					"username": request.POST['username'],
+			}
+			form.save()
+			context['success_message'] = "Updated"
+	else:
+		form = AccountUpdateForm(
 
-    context['account_form']=form
+			initial={
+					"email": request.user.email,
+					"username": request.user.username,
+				}
+			)
 
-
-    return render(request,"account/account.html",context)
+	context['account_form'] = form
+	return render(request, "account/account.html", context)
