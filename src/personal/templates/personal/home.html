@@ -2,12 +2,15 @@
 
 {% block content %}
 
-  <h3>Registerd users: </h3>
+<div class="container">
+  <div class="d-flex flex-column">
+    <h3>Registered users:</h3>
+    {% for account in accounts %}
 
-  {% for account in accounts %}
+    {% include 'personal/snippets/body_snippet.html' with value=account %}
 
-      {% include 'personal/snippets/body_snippet.html' with value=account %}
-
-  {% endfor %}
+    {% endfor %}
+  </div>
+</div>
 
 {% endblock content %}
